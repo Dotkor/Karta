@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Intro to MapView - Create a 2D map</title>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            marg-left: auto;
+            margin-right: auto;
+            height: 90%;
+            width: 90%;
+        }
+    </style>
+    <link rel="stylesheet" href="@Url.Content("~/Content/mytemplate/")css/main.css">
+    <script src="@Url.Content("~/Content/mytemplate/")js/dojo.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div id="viewDiv"></div>
+    <div>
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

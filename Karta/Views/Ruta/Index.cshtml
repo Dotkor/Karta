@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Karta.Models.Ruta>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_mytemplate.cshtml";
+}
+<h2>Routes:</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ay)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bx)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.By)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bx)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.By)
+            </td>
+            <td>
+                @Html.ActionLink("ShowRoute", "Details", new { id = item.Rutaid}) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.Rutaid }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Rutaid })
+            </td>
+        </tr>
+
+
+    }
+    <h3>
+        @Html.ActionLink("Create New Route", "Create")
+    </h3>
+</table>
+
+<script>
+    require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/Graphic"
+    ], function (
+        Map, MapView, Graphic
+    ) {
+
+            var map = new Map({
+                basemap: "streets-navigation-vector"
+            });
+
+            var view = new MapView({
+                zoom: 14,  // Sets zoom level based on level of detail (LOD)
+                center: [18.697271, 45.554769],  // Sets center point of view using longitude,latitude
+                container: "viewDiv",
+                map: map,
+            });
+
+            //Create a polyline graphic
+
+                    // First create a line geometry
+                    var polyline = {
+                        type: "polyline", // autocasts as new Polyline()
+                        paths: [
+                            [@ViewBag.kordAx, @ViewBag.kordAy],
+                            [@ViewBag.kordBx, @ViewBag.kordBy]
+
+                        ]
+                    };
+
+                    // Create a symbol for drawing the line
+                    var lineSymbol = {
+                        type: "simple-line", // autocasts as SimpleLineSymbol()
+                        color: [226, 119, 40],
+                        width: 3
+                    };
+
+                    // Create an object for storing attributes related to the line
+                    var lineAtt = {
+                        Name: "-",
+                        Owner: "-",
+                        Length: "-"
+                    };
+
+                    var polylineGraphic = new Graphic({
+                        geometry: polyline,
+                        symbol: lineSymbol,
+                        attributes: lineAtt,
+                        popupTemplate: { // autocasts as new PopupTemplate()
+                            title: "{Name}",
+                            content: [{
+                                type: "fields",
+                                fieldInfos: [{
+                                    fieldName: "Name"
+                                }, {
+                                    fieldName: "Owner"
+                                }, {
+                                    fieldName: "Length"
+                                }]
+                            }]
+                        }
+                    });
+
+
+
+                    // Add the graphics to the view's graphics layer
+                    view.graphics.addMany([polylineGraphic]);
+
+        });
+</script>
